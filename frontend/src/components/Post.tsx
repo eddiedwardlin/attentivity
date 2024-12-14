@@ -12,7 +12,7 @@ function Post({post}: Props) {
         <p>{post.body}</p>
         {post.image && <Image src={post.image} alt="image" fluid thumbnail />}
         {post.file && <a href={post.file} target="_blank" rel="noopener noreferrer" className="link-item-alt">
-                <b>CLICK TO VIEW FILE</b>
+                <b>CLICK HERE TO VIEW FILE</b>
         </a>}
     </div>
 }
