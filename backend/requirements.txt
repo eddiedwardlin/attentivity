@@ -1,0 +1,9 @@
+Django
+django-cors-headers
+djangorestframework
+djangorestframework-simplejwt
+python-dotenv
+pillow
+django-cleanup
+google-generativeai
+psycopg2-binary

@@ -1,0 +1,39 @@
+body {
+    background-color: #2C2C2C;
+    font-family: "Roboto", sans-serif;
+    color: #F4F4F6;
+    margin: 0;
+    padding: 0;
+}
+
+.list-group-item {
+    background-color: #202022;
+    border-color: #202022;
+}
+
+.link-item {
+    color: #F4F4F6;
+    text-decoration: none;
+}
+
+.link-item:hover {
+    color: #BDBDBD;
+}
+
+.link-item-alt {
+    color: #4ADBC8;
+    text-decoration: none;
+}
+
+.link-item-alt:hover {
+    color: #BDBDBD;
+}
+
+.list-group-item-no-background {
+    background-color: transparent;
+    border-color: #202022;
+}
+
+.list-span {
+    color: #F4F4F6;
+}

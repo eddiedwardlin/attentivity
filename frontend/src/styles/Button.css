@@ -1,0 +1,25 @@
+.delete-button {
+    margin: 10px;
+}
+
+.summary-button {
+    margin: 10px auto;
+    display: block;
+}
+
+.back-button {
+    margin-right: auto;
+}
+
+.button-container {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin: 20px;
+}
+
+.form-button-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
