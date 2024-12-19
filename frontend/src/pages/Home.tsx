@@ -158,15 +158,26 @@ function Home() {
                 </ListGroup>
             </div>
             <div className="home-form-container">
-                <Form onSubmit={createPost} className="form-container-wide">
+                <Form onSubmit={(e) => {
+                        e.preventDefault();
+                        createPost(e);
+                        setTitle("");
+                        setContent("");
+                        const imageInput = document.getElementById('formImage') as HTMLInputElement;
+                        const fileInput = document.getElementById('formFile') as HTMLInputElement;
+
+                        if (imageInput) imageInput.value = '';
+                        if (fileInput) fileInput.value = '';
+                    }} 
+                    className="form-container-wide">
                     <h3>Create a Post</h3>
                     <Form.Group className="mb-3" controlId="formTitle">
                         <Form.Label>Title</Form.Label>
-                        <Form.Control type="text" placeholder="Enter title" onChange={(e) => setTitle(e.target.value)} />
+                        <Form.Control type="text" placeholder="Enter title" value={title} onChange={(e) => setTitle(e.target.value)} />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formDescription">
                         <Form.Label>Description</Form.Label>
-                        <Form.Control as="textarea" rows={5} onChange={(e) => setContent(e.target.value)} />
+                        <Form.Control as="textarea" rows={5} value={content} onChange={(e) => setContent(e.target.value)} />
                     </Form.Group>
                     <Form.Group controlId="formImage" className="mb-3">
                         <Form.Label>Image (max size: 100MB)</Form.Label>
@@ -178,11 +189,12 @@ function Home() {
                                 if (fileInput.files && fileInput.files[0]) {
                                     setImage(fileInput.files[0]);
                                     setFile(null);
+                                    const fileVal = document.getElementById('formFile') as HTMLInputElement;
+                                    if (fileVal) fileVal.value = '';
                                 } else {
                                     setImage(null);
                                 }
                             }}
-                            disabled={!!file}
                         />
                     </Form.Group>
                     <Form.Group controlId="formFile" className="mb-3">
@@ -195,11 +207,12 @@ function Home() {
                                 if (fileInput.files && fileInput.files[0]) {
                                     setFile(fileInput.files[0]);
                                     setImage(null);
+                                    const imageVal = document.getElementById('formImage') as HTMLInputElement;
+                                    if (imageVal) imageVal.value = '';
                                 } else {
                                     setFile(null);
                                 }
                             }}
-                            disabled={!!image}
                         />
                     </Form.Group>
                     <Button variant="primary" type="submit">
