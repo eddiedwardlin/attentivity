@@ -102,7 +102,7 @@ function Comments({post, isGuest}: Props) {
     const summarizeComments = async () => {
         try {
             setLoading(true);
-            const commentsSerialized = comments.map(comment => encodeURIComponent(comment.body)).join('|'); // Pass comments in separated by pipe
+            const commentsSerialized = comments.length === 0 ? "" : comments.map(comment => encodeURIComponent(comment.body)).join('|'); // Pass comments in separated by pipe
             const res = await api.get(`/posts/${post.id}/summary/`, {
                 params: { comments: commentsSerialized },
             });
@@ -156,15 +156,20 @@ function Comments({post, isGuest}: Props) {
 
     return <div>
         {isGuest && (
-            <Form onSubmit={createComment} className="form-container-wide">
+            <Form onSubmit={(e) => {
+                    e.preventDefault();
+                    createComment(e);
+                    setNewComment('');
+                }} 
+                className="form-container-wide">
                 <h4>Add a Comment</h4>
                 <Form.Group className="mb-3" controlId="formName">
                     <Form.Label>Name</Form.Label>
-                    <Form.Control type="text" placeholder="Enter your name" onChange={(e) => setGuestName(e.target.value)} />
+                    <Form.Control type="text" placeholder="Enter your name (defaults to Guest)" onChange={(e) => setGuestName(e.target.value)} />
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="formComment">
                     <Form.Label>Comment</Form.Label>
-                    <Form.Control as="textarea" rows={3} onChange={(e) => setNewComment(e.target.value)} />
+                    <Form.Control as="textarea" rows={3} value={newComment} onChange={(e) => setNewComment(e.target.value)} />
                 </Form.Group>
                 <Button variant="primary" type="submit">
                     Submit
@@ -187,6 +192,7 @@ function Comments({post, isGuest}: Props) {
         ))} */}
 
         <h4>Comments:</h4>
+        {comments.length === 0 && <p className="center-p">No comments</p>}
         <ListGroup variant="flush">
             {comments.map((comment) => (
                 <ListGroup.Item key={comment.id} className="list-group-item-no-background">
@@ -205,9 +211,9 @@ function Comments({post, isGuest}: Props) {
 
         {!isGuest && (
             <div className="button-container">
-                <Button variant="info" size="lg" className="summary-button" onClick={() => {
+                <Button disabled={!updated} variant="info" size="lg" className="summary-button" onClick={() => {
                         getSummary();
-                        if ((summary === null || updated) && comments.length > 0) {
+                        if (summary === null || updated) {
                             summarizeComments();
                         }
                     }}>Summarize {loading && <Spinner animation="border" variant="light" size="sm" className="loading-indicator" />}

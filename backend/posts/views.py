@@ -107,6 +107,9 @@ class PostSummary(generics.RetrieveAPIView):
                 response = model.generate_content("How would you implement this feedback: " + unquote(comments))
             instance.summary = response.text # Set the summary so it can be retrieved in the future with no api call
             instance.save()
+        else:
+            instance.summary = None # Summary set to None if there's no comments
+            instance.save()
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
 
