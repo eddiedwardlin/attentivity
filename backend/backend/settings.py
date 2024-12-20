@@ -144,11 +144,11 @@ if DEV_MODE:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.getenv("DB_NAME"),
-            'USER': os.getenv("DB_USER"),
-            'PASSWORD': os.getenv("DB_PASSWORD"),
-            'HOST': os.getenv("DB_HOST"),
-            'PORT': os.getenv("DB_PORT"),
+            'NAME': os.getenv("DEV_DB_NAME"),
+            'USER': os.getenv("DEV_DB_USER"),
+            'PASSWORD': os.getenv("DEV_DB_PASSWORD"),
+            'HOST': os.getenv("DEV_DB_HOST"),
+            'PORT': os.getenv("DEV_DB_PORT"),
         }
     }
 else:
