@@ -3,8 +3,6 @@ import { useParams } from 'react-router-dom';
 import api from "../api";
 import Post from "../components/Post"
 import Comments from "../components/Comments"
-import LogoutButton from "../components/LogoutButton";
-import { Button } from "react-bootstrap";
 import "../styles/Button.css"
 import "../styles/Details.css"
 
