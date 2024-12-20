@@ -39,5 +39,6 @@ body {
 }
 
 .center-p {
+    margin:50px;
     text-align: center;
 }
