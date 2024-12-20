@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 from datetime import timedelta
 from dotenv import load_dotenv
+from django.core.management.utils import get_random_secret_key
 import os
 
 load_dotenv()
@@ -25,10 +26,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY = os.getenv("SECRET_KEY", get_random_secret_key())
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG", 'False') == "True"
+DEBUG = os.getenv("DEBUG") == "TRUE"
 
 ALLOWED_HOSTS = ['*']
 
@@ -91,6 +92,7 @@ INSTALLED_APPS = [
     'django_cleanup.apps.CleanupConfig',
     'users',
     'posts',
+    'storages',
 ]
 
 X_FRAME_OPTIONS = 'SAMEORIGIN'
@@ -179,6 +181,7 @@ USE_I18N = True
 
 USE_TZ = True
 
+USE_SPACES = os.getenv("USE_SPACES") == "TRUE"
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
@@ -195,5 +198,29 @@ CORS_ALLOWS_CREDENTIALS = True
 
 AUTH_USER_MODEL = 'users.CustomUser'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
+if USE_SPACES:
+    STORAGES = {
+        "default": {
+            "BACKEND": 'storages.backends.s3boto3.S3Boto3Storage',
+            'OPTIONS': {
+                'location': 'default',
+            },
+        },
+        'staticfiles': {
+            'BACKEND': 'storages.backends.s3boto3.S3Boto3Storage',
+            'OPTIONS': {
+                'location': 'static',
+            },
+        },
+    }
+    AWS_ACCESS_KEY_ID = os.getenv("SPACES_ACCESS_KEY")
+    AWS_SECRET_ACCESS_KEY = os.getenv("SPACES_SECRET_KEY")
+    AWS_STORAGE_BUCKET_NAME = os.getenv("SPACES_BUCKET_NAME")
+    AWS_S3_ENDPOINT_URL = os.getenv("SPACES_ENDPOINT")
+    AWS_S3_OBJECT_PARAMETERS = {
+        'CacheControl': 'max-age=86400',
+    }
+    MEDIA_URL = os.getenv("SPACES_CDN_ENDPOINT")
+else:
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+    MEDIA_URL = 'media/'

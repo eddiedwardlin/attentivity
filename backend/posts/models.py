@@ -19,8 +19,8 @@ class Post(models.Model):
         on_delete=models.CASCADE,
     )
     body = models.TextField(_("Post body"))
-    image = models.ImageField(_("Post image"), upload_to="images/%Y/%m/%d", null=True, blank=True)
-    file = models.FileField(_("Post file"), upload_to="files/%Y/%m/%d", null=True, blank=True)
+    image = models.ImageField(_("Post image"), upload_to="images/%Y/%m/%d/", null=True, blank=True)
+    file = models.FileField(_("Post file"), upload_to="files/%Y/%m/%d/", null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     summary = models.TextField(null=True, blank=True)

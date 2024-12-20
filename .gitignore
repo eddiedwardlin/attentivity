@@ -1,3 +1,4 @@
 .env
 env/
 backend/media/
+testing.py

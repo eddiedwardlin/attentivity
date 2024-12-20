@@ -53,7 +53,7 @@ class PostDetail(generics.RetrieveUpdateDestroyAPIView):
                     return [permissions.AllowAny()]
             return [permissions.IsAuthenticatedOrReadOnly(), IsAuthorOrReadOnly()]
             
-        return [permissions.IsAuthenticatedOrReadOnly(), IsAuthorOrReadOnly()]
+        return [permissions.IsAuthenticatedOrReadOnly()]
         
 class RefreshGuestToken(generics.UpdateAPIView):
     queryset = Post.objects.all()

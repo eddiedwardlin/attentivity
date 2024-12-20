@@ -6,6 +6,8 @@ import Button from 'react-bootstrap/Button';
 import CloseButton from 'react-bootstrap/CloseButton';
 import Form from 'react-bootstrap/Form';
 import ListGroup from 'react-bootstrap/ListGroup';
+import Dropdown from 'react-bootstrap/Dropdown';
+import DropdownButton from 'react-bootstrap/DropdownButton';
 import "../styles/Home.css"
 
 function Home() {
@@ -14,6 +16,7 @@ function Home() {
     const [title, setTitle] = useState("");
     const [image, setImage] = useState<File | null>(null);
     const [file, setFile] = useState<File | null>(null);
+    const [postSort, setPostSort] = useState("title");
 
     useEffect(() => {
         getPosts(); // Get posts as soon as page renders
@@ -23,7 +26,7 @@ function Home() {
         api
             .get("/posts/")
             .then((res) => res.data)
-            .then((data) => { setPosts(data) })
+            .then((data) => { setPosts(data), console.log(data) })
             .catch((err) => console.log(err));
     };
 
@@ -53,6 +56,11 @@ function Home() {
             getPosts();
         }).catch((err) => console.log(err));
     }
+
+    const sortedPosts = posts.slice().sort((a, b) => {
+        if (postSort === "title") return a.title.localeCompare(b.title);
+        return 0; // default is date added
+    });
 
     // return <div>
     //     <div className="button-container">
@@ -144,13 +152,17 @@ function Home() {
         </div>
         <div className="form-posts-container">
             <div className="posts-container">
-                <ListGroup variant="flush">
+                <div className="header-container">
                     <h1>Posts</h1>
-                    {posts.map((post) => (  
+                    <DropdownButton id="dropdown-basic-button" title="Sort by" size="sm" variant="secondary" data-bs-theme="dark" align="end" onSelect={(e) => setPostSort(e ?? 'date')}>
+                        <Dropdown.Item eventKey="date" active={postSort === 'date'}>Date added</Dropdown.Item>
+                        <Dropdown.Item eventKey="title" active={postSort === 'title'}>Title</Dropdown.Item>
+                    </DropdownButton>
+                </div>
+                {posts.length === 0 && <p className="center-p">No posts</p>}
+                <ListGroup variant="flush">
+                    {sortedPosts.map((post) => (  
                             <ListGroup.Item key={post.id} className="list-group-item">
-                                {/* <Button variant="outline-danger" size="sm" className="delete-button rounded-circle" onClick={() => deletePost(post.id)}>
-                                    X
-                                </Button> */}
                                 <CloseButton variant="white" onClick={() => deletePost(post.id)} className="delete-button"/>
                                 <Link to="/details" state={{data: post}} className="link-item"><b>{post.title}:</b> {post.body.slice(0, 50)}{post.body.length > 50 && '...'}</Link>
                             </ListGroup.Item>
