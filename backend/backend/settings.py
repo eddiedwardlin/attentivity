@@ -222,7 +222,7 @@ else:
         "default": {
             "BACKEND": 'storages.backends.s3boto3.S3Boto3Storage',
             'OPTIONS': {
-                'location': 'default',
+                'location': 'media',
             },
         },
         'staticfiles': {
@@ -239,5 +239,5 @@ else:
     AWS_S3_OBJECT_PARAMETERS = {
         'CacheControl': 'max-age=86400',
     }
-    MEDIA_URL = os.getenv("SPACES_CDN_ENDPOINT")
-    STATIC_URL = os.getenv("SPACES_CDN_ENDPOINT")
+    MEDIA_URL = f'{os.getenv("SPACES_CDN_ENDPOINT")}/media/'
+    STATIC_URL = f'{os.getenv("SPACES_CDN_ENDPOINT")}/static/'
