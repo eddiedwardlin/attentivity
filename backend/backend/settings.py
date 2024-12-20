@@ -31,6 +31,8 @@ SECRET_KEY = os.getenv("SECRET_KEY", get_random_secret_key())
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG") == "TRUE"
 
+DEV_MODE = os.getenv("DEV_MODE") == "TRUE"
+
 ALLOWED_HOSTS = ['*']
 
 REST_FRAMEWORK = {
@@ -138,17 +140,28 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv("DB_NAME"),
-        'USER': os.getenv("DB_USER"),
-        'PASSWORD': os.getenv("DB_PASSWORD"),
-        'HOST': os.getenv("DB_HOST"),
-        'PORT': os.getenv("DB_PORT"),
+if DEV_MODE:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv("DB_NAME"),
+            'USER': os.getenv("DB_USER"),
+            'PASSWORD': os.getenv("DB_PASSWORD"),
+            'HOST': os.getenv("DB_HOST"),
+            'PORT': os.getenv("DB_PORT"),
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv("DB_NAME"),
+            'USER': os.getenv("DB_USER"),
+            'PASSWORD': os.getenv("DB_PASSWORD"),
+            'HOST': os.getenv("DB_HOST"),
+            'PORT': os.getenv("DB_PORT"),
+        }
+    }
 
 
 # Password validation
@@ -181,12 +194,12 @@ USE_I18N = True
 
 USE_TZ = True
 
-USE_SPACES = os.getenv("USE_SPACES") == "TRUE"
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -198,7 +211,13 @@ CORS_ALLOWS_CREDENTIALS = True
 
 AUTH_USER_MODEL = 'users.CustomUser'
 
-if USE_SPACES:
+if DEV_MODE:
+    STATIC_ROOT = os.path.join(BASE_DIR, "static")
+    STATIC_URL = 'static/'
+
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+    MEDIA_URL = 'media/'
+else:
     STORAGES = {
         "default": {
             "BACKEND": 'storages.backends.s3boto3.S3Boto3Storage',
@@ -221,6 +240,4 @@ if USE_SPACES:
         'CacheControl': 'max-age=86400',
     }
     MEDIA_URL = os.getenv("SPACES_CDN_ENDPOINT")
-else:
-    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-    MEDIA_URL = 'media/'
+    STATIC_URL = os.getenv("SPACES_CDN_ENDPOINT")

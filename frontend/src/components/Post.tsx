@@ -1,5 +1,3 @@
-import { useState, useEffect } from "react";
-import api from "../api";
 import Image from 'react-bootstrap/Image';
 
 interface Props {
