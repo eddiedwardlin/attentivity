@@ -49,7 +49,7 @@ function Comments({post, isGuest}: Props) {
 
     const getComments = () => { // Get comments for a post (uses guest token if not logged in)
         api
-            .get(`/posts/${post.id}/comments`, {
+            .get(`/posts/${post.id}/comments/`, {
                 params: { guest_token: post.guest_token },
             }).then((res) => res.data)
             .then((data) => { setComments(data) })
@@ -117,7 +117,7 @@ function Comments({post, isGuest}: Props) {
 
     const getSummary = () => {
         api
-            .get(`/posts/${post.id}`)
+            .get(`/posts/${post.id}/`)
             .then((res) => res.data)
             .then((data) => { setSummary(data.summary) })
             .catch((err) => console.log(err));
