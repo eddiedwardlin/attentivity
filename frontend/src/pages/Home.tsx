@@ -17,6 +17,7 @@ function Home() {
     const [image, setImage] = useState<File | null>(null);
     const [file, setFile] = useState<File | null>(null);
     const [postSort, setPostSort] = useState("title");
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         getPosts(); // Get posts as soon as page renders
@@ -41,20 +42,49 @@ function Home() {
         }).catch((err) => console.log(err));
     }
 
-    const createPost = (e: React.FormEvent<HTMLFormElement>) => { // Create a post using data from form
+    // const createPost = (e: React.FormEvent<HTMLFormElement>) => { // Create a post using data from form
+    //     e.preventDefault();
+    //     api.post("/posts/", {title: title, body: content, image: image, file: file}, {
+    //         headers: {
+    //             'Content-Type': 'multipart/form-data',
+    //         },
+    //     }).then((res) => {
+    //         if (res.status === 201) {
+    //             console.log("Post created");
+    //         } else {
+    //             console.log("Failed to create post");
+    //         }
+    //         getPosts();
+    //     }).catch((err) => console.log(err));
+    // }
+
+    const createPost = async (e: React.FormEvent<HTMLFormElement>) => { // Create a post using data from form
         e.preventDefault();
-        api.post("/posts/", {title: title, body: content, image: image, file: file}, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-        }).then((res) => {
+
+        try {
+            setLoading(true);
+            const res = await api.post("/posts/", { 
+                title: title, 
+                body: content, 
+                image: image, 
+                file: file 
+            }, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+
             if (res.status === 201) {
                 console.log("Post created");
             } else {
                 console.log("Failed to create post");
             }
             getPosts();
-        }).catch((err) => console.log(err));
+        } catch (err) {
+            console.log(err);
+        } finally {
+            setLoading(false);
+        }
     }
 
     const sortedPosts = posts.slice().sort((a, b) => {
@@ -227,8 +257,8 @@ function Home() {
                             }}
                         />
                     </Form.Group>
-                    <Button variant="primary" type="submit">
-                        Submit
+                    <Button variant="primary" type="submit" disabled={loading}>
+                        {loading ? 'Loading…' : 'Submit'}
                     </Button>
                 </Form>
             </div>

@@ -14,6 +14,8 @@ from datetime import timedelta
 from django.utils.timezone import now
 import time
 import mimetypes
+import requests
+import tempfile
 
 load_dotenv()
 genai.configure(api_key=os.getenv("GEMINI_KEY"))
@@ -81,25 +83,55 @@ class PostSummary(generics.RetrieveAPIView):
         if comments:
             response = ""
             if instance.image:
-                myfile = genai.upload_file(path=instance.image.path) # Upload image to Gemini
+                # Download image and store it temporarily to upload to Gemini
+                imageResponse = requests.get(instance.image.url)
+
+                with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
+                    tmp_file.write(imageResponse.content)
+                    tmp_file_path = tmp_file.name
+                
+                mime_type = imageResponse.headers.get('Content-Type') # Need to pass mime type as well as path
+                
+                try:
+                    myfile = genai.upload_file(path=tmp_file_path, mime_type=mime_type) # Upload image to Gemini
+                except Exception as e:
+                    print(f"Upload failed: {e}")
+
+                os.remove(tmp_file_path)
+
                 # generate a response based on the uploaded image
                 response = model.generate_content(
-                    [myfile, "\n\n", "What changes should I make to the image based on this feedback:", unquote(comments)]
+                    [myfile, "\n\n", "What changes should I make to the", mime_type, "based on this feedback:", unquote(comments)]
                 )
+                
             elif instance.file:
-                file_type = "document"
-                myfile = genai.upload_file(path=instance.file.path) # Upload file to Gemini
+                # Download file and store it temporarily to upload to Gemini
+                print("here")
+                fileResponse = requests.get(instance.file.url)
 
-                mime_type, encoding = mimetypes.guess_type(instance.file.path)
+                with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
+                    tmp_file.write(fileResponse.content)
+                    tmp_file_path = tmp_file.name
+
+                mime_type = fileResponse.headers.get('Content-Type') # Need to pass mime type as well as path
+                print(mime_type)
+
+                try:
+                    myfile = genai.upload_file(path=tmp_file_path, mime_type=mime_type) # Upload file to Gemini
+                except Exception as e:
+                    print(f"Upload failed: {e}")
+
+                # mime_type, _ = mimetypes.guess_type(instance.file.path)
+
+                # Wait for video file state to become ACTIVE
                 if mime_type and mime_type.startswith('video'):
-                    file_type = "video"
                     while myfile.state.name == "PROCESSING":
                         time.sleep(10)
                         myfile = genai.get_file(myfile.name)
                 
                 # generate a response based on the uploaded document
                 response = model.generate_content(
-                    [myfile, "\n\n", "What changes should I make to the", file_type, "based on this feedback:", unquote(comments)], 
+                    [myfile, "\n\n", "What changes should I make to the", mime_type, "based on this feedback:", unquote(comments)], 
                     request_options={"timeout": 600}
                 )
             else:
@@ -110,6 +142,7 @@ class PostSummary(generics.RetrieveAPIView):
         else:
             instance.summary = None # Summary set to None if there's no comments
             instance.save()
+
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
 
