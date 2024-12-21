@@ -16,3 +16,15 @@
     min-width: 45%;
     margin: 10px;
 }
+
+.copy-toast {
+    width: 60px !important;
+    height: 30px;
+}
+
+.toast-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
