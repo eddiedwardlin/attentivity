@@ -28,7 +28,8 @@ function Comments({post, isGuest}: Props) {
     const [summary, setSummary] = useState("");
     const [currUser, setCurrUser] = useState<User | null>(null);
     const [updated, setUpdated] = useState(true);
-    const [loading, setLoading] = useState(false);
+    const [summaryLoading, setSummaryLoading] = useState(false);
+    const[commentLoading, setCommentLoading] = useState(false);
     const [guestName, setGuestName] = useState("Guest");
 
     useEffect(() => {
@@ -70,11 +71,30 @@ function Comments({post, isGuest}: Props) {
         }).catch((err) => console.log(err));
     };
 
-    const createComment = (e: React.FormEvent<HTMLFormElement>) => {
+    // const createComment = (e: React.FormEvent<HTMLFormElement>) => {
+    //     e.preventDefault();
+    //     api.post(`/posts/${post.id}/comments/`, {body: newComment, guest_name: guestName}, {
+    //         params: { guest_token: post.guest_token },
+    //     }).then((res) => {
+    //         if (res.status === 201) {
+    //             console.log("Comment created");
+    //         } else {
+    //             console.log("Failed to create comment");
+    //         }
+    //         getComments();
+    //         setUpdated(true); // Generate summary instead of retrieving since there's a change
+    //     }).catch((err) => console.log(err));
+    // };
+
+    const createComment = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        api.post(`/posts/${post.id}/comments/`, {body: newComment, guest_name: guestName}, {
-            params: { guest_token: post.guest_token },
-        }).then((res) => {
+        try {
+            setCommentLoading(true);
+            const res = await api.post(`/posts/${post.id}/comments/`, 
+                {body: newComment, guest_name: guestName}, 
+                {
+                    params: { guest_token: post.guest_token },
+            });
             if (res.status === 201) {
                 console.log("Comment created");
             } else {
@@ -82,8 +102,12 @@ function Comments({post, isGuest}: Props) {
             }
             getComments();
             setUpdated(true); // Generate summary instead of retrieving since there's a change
-        }).catch((err) => console.log(err));
-    };
+        } catch (err) {
+            console.log(err);
+        } finally {
+            setCommentLoading(false);
+        }
+    }
 
     // const summarizeComments = () => {
     //     setLoading(true);
@@ -101,7 +125,7 @@ function Comments({post, isGuest}: Props) {
 
     const summarizeComments = async () => {
         try {
-            setLoading(true);
+            setSummaryLoading(true);
             const commentsSerialized = comments.length === 0 ? "" : comments.map(comment => encodeURIComponent(comment.body)).join('|'); // Pass comments in separated by pipe
             const res = await api.get(`/posts/${post.id}/summary/`, {
                 params: { comments: commentsSerialized },
@@ -111,7 +135,7 @@ function Comments({post, isGuest}: Props) {
         } catch (err) {
             console.log(err)
         } finally {
-            setLoading(false);
+            setSummaryLoading(false);
         }
     };
 
@@ -168,11 +192,11 @@ function Comments({post, isGuest}: Props) {
                     <Form.Control type="text" placeholder="Enter your name (defaults to Guest)" onChange={(e) => setGuestName(e.target.value)} />
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="formComment">
-                    <Form.Label>Comment</Form.Label>
+                    <Form.Label>Comment *</Form.Label>
                     <Form.Control as="textarea" rows={3} value={newComment} onChange={(e) => setNewComment(e.target.value)} />
                 </Form.Group>
-                <Button variant="primary" type="submit">
-                    Submit
+                <Button variant="primary" type="submit" disabled={commentLoading || !newComment.trim()}>
+                    {commentLoading ? 'Loading…' : 'Submit'}
                 </Button>
             </Form>
         )}
@@ -203,24 +227,25 @@ function Comments({post, isGuest}: Props) {
                         <CloseButton variant="white" onClick={() => deleteComment(comment.id)} className="delete-button"/>
                     )}
                     {!!comment.author ? (
-                        <span className="list-span"><b>{comment.author}:</b> {comment.body} </span>
+                        <span className="list-span"><b>Post author:</b> {comment.body} </span>
                     ) : <span className="list-span"><b>{comment.guest_name}:</b> {comment.body}</span>}
                 </ListGroup.Item>
             ))}
         </ListGroup>
 
         {!isGuest && (
-            <div className="button-container">
-                <Button disabled={!updated || loading} variant="info" size="lg" className="summary-button" onClick={() => {
+            <div className="centered-container">
+                <Button disabled={!updated || summaryLoading} variant="info" size="lg" className="summary-button" onClick={() => {
                         getSummary();
                         if (summary === null || updated) {
                             summarizeComments();
                         }
-                    }}>Summarize {loading && <Spinner animation="border" variant="light" size="sm" className="loading-indicator" />}
+                    }}>Summarize
                 </Button>
+                {summaryLoading && <Spinner animation="border" variant="light" size="sm" className="loading-indicator" />}
             </div>
         )}
-            
+    
         {!isGuest && <Markdown>{summary}</Markdown>}
         
     </div>

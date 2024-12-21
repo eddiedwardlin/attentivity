@@ -42,3 +42,11 @@ body {
     margin: 50px;
     text-align: center;
 }
+
+.centered-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 25px;
+}

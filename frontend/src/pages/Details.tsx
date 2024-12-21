@@ -7,6 +7,7 @@ import LogoutButton from "../components/LogoutButton";
 import { Button } from "react-bootstrap";
 import "../styles/Button.css"
 import "../styles/Details.css"
+import Footer from "../components/Footer";
 
 function Details() {
     const location = useLocation();
@@ -25,7 +26,7 @@ function Details() {
             .catch((err) => console.log(err));
     };
 
-    return (<div>
+    return <div>
         <div className="button-container">
             <Button variant="dark" size="sm" onClick={() => navigate(-1)} className="back-button">Back</Button>
             <Link to={`/guestDetails/${state.data.id}/${guestToken}`}>Share Link (right click to copy)</Link>
@@ -40,7 +41,8 @@ function Details() {
                 <Comments post={ state.data } isGuest={ false }></Comments>
             </div>
         </div>
-    </div>);
+        <Footer/>
+    </div>;
 }
 
 export default Details;
