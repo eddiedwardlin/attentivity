@@ -23,3 +23,7 @@
     flex-direction: column;
     gap: 10px;
 }
+
+.loading-indicator {
+    margin-left: 5px;
+}

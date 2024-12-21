@@ -211,7 +211,7 @@ function Comments({post, isGuest}: Props) {
 
         {!isGuest && (
             <div className="button-container">
-                <Button disabled={!updated} variant="info" size="lg" className="summary-button" onClick={() => {
+                <Button disabled={!updated || loading} variant="info" size="lg" className="summary-button" onClick={() => {
                         getSummary();
                         if (summary === null || updated) {
                             summarizeComments();
