@@ -8,6 +8,7 @@ import Form from 'react-bootstrap/Form';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
+import Footer from "../components/Footer";
 import "../styles/Home.css"
 
 function Home() {
@@ -214,11 +215,11 @@ function Home() {
                     className="form-container-wide">
                     <h3>Create a Post</h3>
                     <Form.Group className="mb-3" controlId="formTitle">
-                        <Form.Label>Title</Form.Label>
+                        <Form.Label>Title *</Form.Label>
                         <Form.Control type="text" placeholder="Enter title" value={title} onChange={(e) => setTitle(e.target.value)} />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formDescription">
-                        <Form.Label>Description</Form.Label>
+                        <Form.Label>Description *</Form.Label>
                         <Form.Control as="textarea" rows={5} value={content} onChange={(e) => setContent(e.target.value)} />
                     </Form.Group>
                     <Form.Group controlId="formImage" className="mb-3">
@@ -257,12 +258,13 @@ function Home() {
                             }}
                         />
                     </Form.Group>
-                    <Button variant="primary" type="submit" disabled={loading}>
+                    <Button variant="primary" type="submit" disabled={loading || !title.trim() || !content.trim()}>
                         {loading ? 'Loading…' : 'Submit'}
                     </Button>
                 </Form>
             </div>
         </div>
+        <Footer/>
     </div>;
 }
 

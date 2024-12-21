@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import api from "../api";
 import Post from "../components/Post"
 import Comments from "../components/Comments"
+import Footer from "../components/Footer";
 import "../styles/Button.css"
 import "../styles/Details.css"
 
@@ -34,7 +35,7 @@ function GuestDetails() {
         return <div></div>;
     }
 
-    return (<div>
+    return <div>
         <div className="post-comments-container">
             <div className="post-container">
                 <Post post={ post }></Post>
@@ -43,7 +44,8 @@ function GuestDetails() {
                 <Comments post={ post } isGuest={ true }></Comments>
             </div>
         </div>
-    </div>);
+        <Footer/>
+    </div>;
 }
 
 export default GuestDetails;

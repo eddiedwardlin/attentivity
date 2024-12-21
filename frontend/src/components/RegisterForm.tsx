@@ -89,23 +89,23 @@ function RegisterForm({route}: Props) {
     return <Form onSubmit={handleSubmit} className="form-container">
         <h2>Register</h2>
         <Form.Group className="mb-3" controlId="formFirstName">
-            <Form.Label>First Name</Form.Label>
+            <Form.Label>First Name *</Form.Label>
             <Form.Control type="text" placeholder="Enter first name" onChange={(e) => setFirstName(e.target.value)} />
         </Form.Group>
         <Form.Group className="mb-3" controlId="formLastName">
-            <Form.Label>Last Name</Form.Label>
+            <Form.Label>Last Name *</Form.Label>
             <Form.Control type="text" placeholder="Enter last name" onChange={(e) => setLastName(e.target.value)} />
         </Form.Group>
         <Form.Group className="mb-3" controlId="formEmail">
-            <Form.Label>Email address</Form.Label>
+            <Form.Label>Email address *</Form.Label>
             <Form.Control type="email" placeholder="Enter email" onChange={(e) => setEmail(e.target.value)} />
         </Form.Group>
         <Form.Group className="mb-3" controlId="formPassword">
-            <Form.Label>Password</Form.Label>
+            <Form.Label>Password *</Form.Label>
             <Form.Control type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
         </Form.Group>
         <Form.Group className="mb-3" controlId="formPassword">
-            <Form.Label>Confirm Password</Form.Label>
+            <Form.Label>Confirm Password *</Form.Label>
             <Form.Control type="password" placeholder="Confirm Password" onChange={(e) => setConfirmPassword(e.target.value)} />
         </Form.Group>
         <Button variant="primary" type="submit">
