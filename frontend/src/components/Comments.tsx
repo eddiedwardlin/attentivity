@@ -71,21 +71,6 @@ function Comments({post, isGuest}: Props) {
         }).catch((err) => console.log(err));
     };
 
-    // const createComment = (e: React.FormEvent<HTMLFormElement>) => {
-    //     e.preventDefault();
-    //     api.post(`/posts/${post.id}/comments/`, {body: newComment, guest_name: guestName}, {
-    //         params: { guest_token: post.guest_token },
-    //     }).then((res) => {
-    //         if (res.status === 201) {
-    //             console.log("Comment created");
-    //         } else {
-    //             console.log("Failed to create comment");
-    //         }
-    //         getComments();
-    //         setUpdated(true); // Generate summary instead of retrieving since there's a change
-    //     }).catch((err) => console.log(err));
-    // };
-
     const createComment = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
@@ -108,20 +93,6 @@ function Comments({post, isGuest}: Props) {
             setCommentLoading(false);
         }
     }
-
-    // const summarizeComments = () => {
-    //     setLoading(true);
-    //     const commentsSerialized = comments.map(comment => encodeURIComponent(comment.body)).join('|');
-    //     api.get(`/posts/${post.id}/summary/`, {
-    //         params: { comments: commentsSerialized },
-    //     }).then((res) => res.data)
-    //     .then((data) => { 
-    //         setSummary(data.summary)
-    //         setUpdated(false)
-    //     })
-    //     .catch((err) => alert(err))
-    //     .finally(() => setLoading(false));
-    // };
 
     const summarizeComments = async () => {
         try {
@@ -146,37 +117,6 @@ function Comments({post, isGuest}: Props) {
             .then((data) => { setSummary(data.summary) })
             .catch((err) => console.log(err));
     };
-    
-    // return <div>
-
-    //     <h2>Add a Comment</h2>
-    //     <form onSubmit={createComment}>
-    //         <label htmlFor="content">New comment:</label>
-    //         <br />
-    //         <textarea
-    //             id="content"
-    //             name="content"
-    //             required
-    //             value={newComment}
-    //             onChange={(e) => setNewComment(e.target.value)}
-    //         ></textarea>
-    //         <input type="submit" value="Submit"></input>
-    //     </form>
-        
-    //     <h3>Comments</h3>
-    //     {comments.map((comment) => (
-    //         <li key={comment.id}>
-    //             "{comment.body}" by {comment.author}
-    //             {(comment.author === currUser?.email || currUser?.is_staff) && (
-    //                 <button className="delete-button" onClick={() => deleteComment(comment.id)}>
-    //                             Delete
-    //                 </button>
-    //             )}
-    //         </li>
-    //     ))}
-    //     <button className="summary-button" onClick={() => {if (updated) summarizeComments()}}>Summarize</button>
-    //     <Markdown>{summary}</Markdown>
-    // </div>
 
     return <div>
         {isGuest && (
@@ -200,20 +140,6 @@ function Comments({post, isGuest}: Props) {
                 </Button>
             </Form>
         )}
-        
-        {/* <h3>Comments</h3>
-        {comments.map((comment) => (
-            <li key={comment.id}>
-                {!!comment.author ? (
-                    <span><b>{comment.author}:</b> {comment.body} </span>
-                ) : <span><b>Guest:</b> {comment.body}</span>}
-                {(!comment.author || currUser) && (
-                    <Button variant="danger" className="delete-button" onClick={() => deleteComment(comment.id)}>
-                                X
-                    </Button>
-                )}
-            </li>
-        ))} */}
 
         <h4>Comments:</h4>
         {comments.length === 0 && <p className="center-p">No comments</p>}
@@ -221,9 +147,6 @@ function Comments({post, isGuest}: Props) {
             {comments.map((comment) => (
                 <ListGroup.Item key={comment.id} className="list-group-item-no-background">
                     {(!comment.author || currUser) && (
-                        // <Button variant="outline-danger" size="sm" className="delete-button rounded-circle" onClick={() => deleteComment(comment.id)}>
-                        //     X
-                        // </Button>
                         <CloseButton variant="white" onClick={() => deleteComment(comment.id)} className="delete-button"/>
                     )}
                     {!!comment.author ? (

@@ -43,22 +43,6 @@ function Home() {
         }).catch((err) => console.log(err));
     }
 
-    // const createPost = (e: React.FormEvent<HTMLFormElement>) => { // Create a post using data from form
-    //     e.preventDefault();
-    //     api.post("/posts/", {title: title, body: content, image: image, file: file}, {
-    //         headers: {
-    //             'Content-Type': 'multipart/form-data',
-    //         },
-    //     }).then((res) => {
-    //         if (res.status === 201) {
-    //             console.log("Post created");
-    //         } else {
-    //             console.log("Failed to create post");
-    //         }
-    //         getPosts();
-    //     }).catch((err) => console.log(err));
-    // }
-
     const createPost = async (e: React.FormEvent<HTMLFormElement>) => { // Create a post using data from form
         e.preventDefault();
 
@@ -92,90 +76,6 @@ function Home() {
         if (postSort === "title") return a.title.localeCompare(b.title);
         return 0; // default is date added
     });
-
-    // return <div>
-    //     <div className="button-container">
-    //         <LogoutButton/>
-    //     </div>
-    //     <div className="form-posts-container">
-    //         <div className="posts-container">
-    //             <h3>Posts</h3>
-    //             {posts.map((post) => (
-    //                     <li key={post.id}>
-    //                         <Link to="/details" state={{data: post}}>{post.title} - {post.author}</Link>
-    //                         <button className="delete-button" onClick={() => deletePost(post.id)}>
-    //                             Delete
-    //                         </button>
-    //                     </li>
-    //             ))}
-    //         </div>
-    //         <div className="home-form-container">
-    //             <h3>Create a Project</h3>
-    //             <form onSubmit={createPost}>
-    //                 <label htmlFor="title">Title:</label>
-    //                 <br />
-    //                 <input
-    //                     type="text"
-    //                     id="title"
-    //                     name="title"
-    //                     required
-    //                     onChange={(e) => setTitle(e.target.value)}
-    //                     value={title}
-    //                 />
-    //                 <label htmlFor="content">Content:</label>
-    //                 <br />
-    //                 <textarea
-    //                     id="content"
-    //                     name="content"
-    //                     required
-    //                     value={content}
-    //                     onChange={(e) => setContent(e.target.value)}
-    //                 ></textarea>
-    //                 <label htmlFor="image">Image:</label>
-    //                 <br />
-    //                 <input
-    //                     type="file"
-    //                     id="image"
-    //                     name="image"
-    //                     accept="image/png, image/jpeg, image/webp, image/heic, image/heif"
-    //                     onChange={(e) => {
-    //                         if (e.target.files && e.target.files[0]) {
-    //                             setImage(e.target.files[0]);
-    //                             setFile(null);
-    //                             const fileInput = document.getElementById("file") as HTMLInputElement | null;;
-    //                             if (fileInput) {
-    //                                 fileInput.value = "";
-    //                             }
-    //                         } else {
-    //                             setImage(null);
-    //                         }
-    //                     }}
-    //                 />
-    //                 <label htmlFor="file">File:</label>
-    //                 <br />
-    //                 <input
-    //                     type="file"
-    //                     id="file"
-    //                     name="file"
-    //                     accept="application/pdf, text/plain, text/rtf"
-    //                     onChange={(e) => {
-    //                         if (e.target.files && e.target.files[0]) {
-    //                             setFile(e.target.files[0]);
-    //                             setImage(null);
-    //                             const imageInput = document.getElementById("image") as HTMLInputElement | null;
-    //                             if (imageInput) {
-    //                                 imageInput.value = "";
-    //                             }
-    //                         } else {
-    //                             setFile(null);
-    //                         }
-    //                     }}
-    //                 />
-    //                 <input type="submit" value="Submit"></input>
-    //             </form>
-    //         </div>
-    //     </div>
-    // </div>;
 
     return <div>
         <div className="button-container">

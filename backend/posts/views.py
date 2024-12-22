@@ -24,7 +24,6 @@ model = genai.GenerativeModel("gemini-1.5-flash")
 DEV_MODE = os.getenv("DEV_MODE") == "TRUE"
 
 class PostList(generics.ListCreateAPIView):
-    # queryset = Post.objects.all()
     serializer_class = serializers.PostSerializer
     parser_classes = [MultiPartParser, FormParser] # Different parsers to deal with images and files
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
@@ -38,11 +37,6 @@ class PostList(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
-
-# class PostDetail(generics.RetrieveUpdateDestroyAPIView):
-#     queryset = Post.objects.all()
-#     serializer_class = serializers.PostSerializer
-#     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]
 
 class PostDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.all()
@@ -83,61 +77,6 @@ class PostSummary(generics.RetrieveAPIView):
         comments = self.request.query_params.get('comments') # comments passed as query parameters since it's not stored in post model
 
         if comments:
-            # response = ""
-            # if instance.image:
-            #     # Download image and store it temporarily to upload to Gemini
-            #     imageResponse = requests.get(instance.image.url)
-
-            #     with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
-            #         tmp_file.write(imageResponse.content)
-            #         tmp_file_path = tmp_file.name
-                
-            #     mime_type = imageResponse.headers.get('Content-Type') # Need to pass mime type as well as path
-                
-            #     try:
-            #         myfile = genai.upload_file(path=tmp_file_path, mime_type=mime_type) # Upload image to Gemini
-            #     except Exception as e:
-            #         print(f"Upload failed: {e}")
-
-            #     os.remove(tmp_file_path)
-
-            #     # generate a response based on the uploaded image
-            #     response = model.generate_content(
-            #         [myfile, "\n\n", "What changes should I make to the", mime_type, "based on this feedback:", unquote(comments)]
-            #     )
-                
-            # elif instance.file:
-            #     # Download file and store it temporarily to upload to Gemini
-            #     fileResponse = requests.get(instance.file.url)
-
-            #     with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
-            #         tmp_file.write(fileResponse.content)
-            #         tmp_file_path = tmp_file.name
-
-            #     mime_type = fileResponse.headers.get('Content-Type') # Need to pass mime type as well as path
-            #     print(mime_type)
-
-            #     try:
-            #         myfile = genai.upload_file(path=tmp_file_path, mime_type=mime_type) # Upload file to Gemini
-            #     except Exception as e:
-            #         print(f"Upload failed: {e}")
-
-            #     # mime_type, _ = mimetypes.guess_type(instance.file.path)
-
-            #     # Wait for video file state to become ACTIVE
-            #     if mime_type and mime_type.startswith('video'):
-            #         while myfile.state.name == "PROCESSING":
-            #             time.sleep(10)
-            #             myfile = genai.get_file(myfile.name)
-                
-            #     # generate a response based on the uploaded document
-            #     response = model.generate_content(
-            #         [myfile, "\n\n", "What changes should I make to the", mime_type, "based on this feedback:", unquote(comments)], 
-            #         request_options={"timeout": 600}
-            #     )
-            # else:
-            #     # Generate response with no image/file
-            #     response = model.generate_content("How would you implement this feedback: " + unquote(comments))
             instance.summary = getSummary(instance, comments) # Set the summary so it can be retrieved in the future with no api call
             instance.save()
         else:
@@ -147,31 +86,8 @@ class PostSummary(generics.RetrieveAPIView):
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
 
-# class CommentList(generics.ListCreateAPIView):
-#     serializer_class = serializers.CommentSerializer
-#     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-
-#     def get_queryset(self):
-#         post_id = self.kwargs['post_id']
-#         if self.request.user.is_authenticated:
-#             return Comment.objects.filter(post_id=post_id)
-#         return None
-
-#     def perform_create(self, serializer):
-#         post = Post.objects.get(id=self.kwargs['post_id'])
-#         serializer.save(post=post, author=self.request.user)
-
-# class CommentDetail(generics.RetrieveUpdateDestroyAPIView):
-#     serializer_class = serializers.CommentSerializer
-#     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]
-
-#     def get_queryset(self):
-#         post_id = self.kwargs['post_id']
-#         return Comment.objects.filter(post_id=post_id)
-
 class CommentList(generics.ListCreateAPIView):
     serializer_class = serializers.CommentSerializer
-    # permission_classes = [permissions.AllowAny]
 
     def get_queryset(self):
         post_id = self.kwargs['post_id']
@@ -194,7 +110,6 @@ class CommentList(generics.ListCreateAPIView):
 
 class CommentDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializers.CommentSerializer
-    # permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]
 
     def get_queryset(self):
         post_id = self.kwargs['post_id']
