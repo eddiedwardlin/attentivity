@@ -46,46 +46,6 @@ function RegisterForm({route}: Props) {
         }
     };
 
-    // return <form onSubmit={handleSubmit} className="form-container">
-    //     <h1>Register</h1>
-    //     <input
-    //         className="form-input"
-    //         type="text"
-    //         value={firstName}
-    //         onChange={(e) => setFirstName(e.target.value)}
-    //         placeholder="First Name"
-    //     />
-    //     <input
-    //         className="form-input"
-    //         type="text"
-    //         value={lastName}
-    //         onChange={(e) => setLastName(e.target.value)}
-    //         placeholder="Last Name"
-    //     />
-    //     <input
-    //         className="form-input"
-    //         type="email"
-    //         value={email}
-    //         onChange={(e) => setEmail(e.target.value)}
-    //         placeholder="Email"
-    //     />
-    //     <input
-    //         className="form-input"
-    //         type="password"
-    //         value={password}
-    //         onChange={(e) => setPassword(e.target.value)}
-    //         placeholder="Password"
-    //     />
-    //     <input
-    //         className="form-input"
-    //         type="password"
-    //         value={confirmPassword}
-    //         onChange={(e) => setConfirmPassword(e.target.value)}
-    //         placeholder="Confirm Password"
-    //     />
-    //     <button className="form-button" type="submit">Register</button>
-    // </form>;
-
     return <Form onSubmit={handleSubmit} className="form-container">
         <h2>Register</h2>
         <Form.Group className="mb-3" controlId="formFirstName">

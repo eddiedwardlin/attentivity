@@ -2,7 +2,7 @@ import "../styles/Footer.css"
 
 function Footer () {
     return <div className="footer">
-        <p>Brought to you by Edward Lin :)</p>
+        <p><small>Brought to you by Edward Lin.</small></p>
     </div>
 }
 

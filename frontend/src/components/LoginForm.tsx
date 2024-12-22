@@ -41,25 +41,6 @@ function LoginForm({route}: Props) {
         }
     };
 
-    // return <form onSubmit={handleSubmit} className="form-container">
-    //     <h1>Login</h1>
-    //     <input
-    //         className="form-input"
-    //         type="email"
-    //         value={email}
-    //         onChange={(e) => setEmail(e.target.value)}
-    //         placeholder="Email"
-    //     />
-    //     <input
-    //         className="form-input"
-    //         type="password"
-    //         value={password}
-    //         onChange={(e) => setPassword(e.target.value)}
-    //         placeholder="Password"
-    //     />
-    //     <button className="form-button" type="submit">Login</button>
-    // </form>;
-
     return <Form onSubmit={handleSubmit} className="form-container">
         <h2>Login</h2>
         <Form.Group className="mb-3" controlId="formEmail">
