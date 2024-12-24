@@ -4,11 +4,12 @@ import api from "../api";
 import Post from "../components/Post"
 import Comments from "../components/Comments"
 import LogoutButton from "../components/LogoutButton";
-import { Button } from "react-bootstrap";
+import Button from 'react-bootstrap/Button';
 import "../styles/Button.css"
 import "../styles/Details.css"
 import Toast from 'react-bootstrap/Toast';
 import Footer from "../components/Footer";
+import Modal from 'react-bootstrap/Modal';
 
 function Details() {
     const location = useLocation();
@@ -16,6 +17,7 @@ function Details() {
     const navigate = useNavigate();
     const [guestToken, setGuestToken] = useState('');
     const [copyAlert, setCopyAlert] = useState(false);
+    const [refreshAlert, setRefreshAlert] = useState(false);
 
     useEffect(() => {
         setGuestToken(state.data.guest_token); // Store guest token in separate state so that it can be refreshed and updated
@@ -41,7 +43,21 @@ function Details() {
                 <Toast.Body className="toast-text">Copied</Toast.Body>
             </Toast>
             <Link to={`/guestDetails/${state.data.id}/${guestToken}`} onClick={(e) => copyLink(e, `/guestDetails/${state.data.id}/${guestToken}`)}>Share Link (click to copy)</Link>
-            <Button variant="warning" size="sm" onClick={() => refreshGuestToken()}>Refresh Share Link</Button>
+            <Button variant="warning" size="sm" onClick={() => setRefreshAlert(true)}>Refresh Share Link</Button>
+            <Modal show={refreshAlert} onHide={() => setRefreshAlert(false)}>
+                <Modal.Header closeButton>
+                <Modal.Title>WARNING</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>Refreshing share link revokes access to previously shared links.</Modal.Body>
+                <Modal.Footer>
+                <Button variant="secondary" onClick={() => setRefreshAlert(false)}>
+                    Close
+                </Button>
+                <Button variant="danger" onClick={() => {refreshGuestToken(); setRefreshAlert(false)}}>
+                    Confirm
+                </Button>
+                </Modal.Footer>
+            </Modal>
             <LogoutButton/>
         </div>
         <div className="post-comments-container">
