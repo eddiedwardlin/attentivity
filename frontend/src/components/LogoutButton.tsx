@@ -12,7 +12,7 @@ function LogoutButton() {
         let refreshToken = localStorage.getItem(REFRESH_TOKEN);
         api.post("/users/logout/", {refresh: refreshToken}).then((res) => {
             if (res.status === 205) {
-                alert("User logged out");
+                alert("Successfully logged out");
             }
             navigate('/logout');
         }).catch((err) => console.log(err));
