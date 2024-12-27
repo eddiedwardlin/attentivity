@@ -8,7 +8,7 @@ from datetime import timedelta
 from django.utils.timezone import now
 
 class Project(models.Model):
-    title = models.CharField(_("Project title"), max_length=250, unique=True)
+    title = models.CharField(_("Project title"), max_length=250)
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         related_name="projects",
@@ -20,6 +20,9 @@ class Project(models.Model):
 
     class Meta:
         ordering = ("-created_at",)
+        constraints = [
+            models.UniqueConstraint(fields=['author', 'title'], name='unique_project_per_user') # Projects made by a user must have a unique name
+        ]
 
     def __str__(self):
         return self.title
@@ -34,7 +37,7 @@ class Post(models.Model):
         null=True,
         on_delete=models.CASCADE,
     )
-    title = models.CharField(_("Post title"), max_length=250, unique=True)
+    title = models.CharField(_("Post title"), max_length=250)
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         related_name="posts",
@@ -52,6 +55,9 @@ class Post(models.Model):
 
     class Meta:
         ordering = ("title",)
+        constraints = [
+            models.UniqueConstraint(fields=['author', 'project', 'title'], name='unique_post_per_user') # Posts made by the same user in the same project must have a unique name
+        ]
 
     def __str__(self):
         return f"{self.title} by {self.author}"
