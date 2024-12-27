@@ -6,10 +6,10 @@ body {
     padding: 0;
 }
 
-.list-group-item {
+/* .list-group-item {
     background-color: #202022;
     border-color: #202022;
-}
+} */
 
 .link-item {
     color: #F4F4F6;
@@ -31,7 +31,11 @@ body {
 
 .list-group-item-no-background {
     background-color: transparent;
-    border-color: #202022;
+}
+
+.list-group-item-no-background-no-border {
+    border-color: transparent;
+    background-color: transparent;
 }
 
 .list-span {
@@ -43,10 +47,23 @@ body {
     text-align: center;
 }
 
+.center-p-small-margins {
+    margin: 10px;
+    text-align: center;
+}
+
 .centered-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     margin: 25px;
+}
+
+.center-link {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    margin: 50px;
 }

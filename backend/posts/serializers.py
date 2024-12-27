@@ -1,16 +1,37 @@
 from rest_framework import serializers
 
-from .models import Comment, Post
+from .models import Comment, Post, Project
+
+class ProjectSerializer(serializers.ModelSerializer):
+    author = serializers.ReadOnlyField(source='author.email')
+    posts = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+
+    class Meta:
+        model = Project
+        fields = ['id', 'title', 'author', 'posts']
 
 class PostSerializer(serializers.ModelSerializer):
+    project = serializers.SlugRelatedField(queryset=Project.objects.none(), slug_field='title')
     author = serializers.ReadOnlyField(source='author.email')
     comments = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     image = serializers.ImageField(required=False)
     file = serializers.FileField(required=False)
+    summary = serializers.ReadOnlyField()
+    guest_token_expiration = serializers.ReadOnlyField()
 
     class Meta:
         model = Post
-        fields = ['id', 'title', 'body', 'author', 'image', 'file', 'comments', 'summary', 'guest_token', 'guest_token_expiration']
+        fields = ['id', 'project', 'title', 'body', 'author', 'image', 'file', 'comments', 'summary', 'guest_token', 'guest_token_expiration']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Restrict project queryset by user
+        user = self.context['request'].user
+        if user.is_authenticated:
+            if user.is_staff:  # Staff can access all projects
+                self.fields['project'].queryset = Project.objects.all()
+            else:  # Regular users can only access their own projects
+                self.fields['project'].queryset = Project.objects.filter(author=user)
 
     def validate_image(self, data):
         max_file_size = 100 * 1024 * 1024  # 100MB
