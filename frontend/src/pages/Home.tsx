@@ -66,7 +66,7 @@ function Home() {
             getProjects();
         } catch (err) {
             if (err instanceof AxiosError) {
-                alert(err.response?.data?.title); // No duplicate titles
+                alert("A project with the same title already exists"); // No duplicate titles
             }
             console.log(err);
         } finally {
@@ -120,7 +120,7 @@ function Home() {
             getPosts();
         } catch (err) {
             if (err instanceof AxiosError) {
-                alert(err.response?.data?.title); // No duplicate titles
+                alert("A post with the same title already exists for this project"); // No duplicate titles
             }
             console.log(err);
         } finally {
