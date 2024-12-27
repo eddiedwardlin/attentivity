@@ -40,8 +40,9 @@ def getSummary(instance, comments): # Instance is a post
             os.remove(imagePath) # remove temp file
 
         # Generate a response based on the uploaded image
+        prompt = "This work is described by the author as: ", instance.body, "\n\nWhat changes should they make to the", mime_type, "based on this feedback:", unquote(comments)
         response = model.generate_content(
-            [myfile, "\n\n", "What changes should I make to the", mime_type, "based on this feedback:", unquote(comments)]
+            [myfile, "\n\n", prompt]
         )
         
     elif instance.file:
@@ -76,12 +77,14 @@ def getSummary(instance, comments): # Instance is a post
                 myfile = genai.get_file(myfile.name)
         
         # Generate a response based on the uploaded document
+        prompt = "This work is described by the author as: ", instance.body, "\n\nWhat changes should I make to the", mime_type, "based on this feedback:", unquote(comments)
         response = model.generate_content(
-            [myfile, "\n\n", "What changes should I make to the", mime_type, "based on this feedback:", unquote(comments)], 
+            [myfile, "\n\n", prompt], 
             request_options={"timeout": 600}
         )
     else:
         # Generate response with no image/file
-        response = model.generate_content("How would you implement this feedback: " + unquote(comments))
+        prompt = "This work is described by the author as: ", instance.body, "\n\nHow would you implement this feedback: " + unquote(comments)
+        response = model.generate_content(prompt)
 
     return response.text

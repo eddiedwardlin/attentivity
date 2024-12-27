@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from posts.models import Comment, Post
+from posts.models import Comment, Post, Project
 from rest_framework import generics, permissions
 from rest_framework.parsers import JSONParser, MultiPartParser, FormParser
 from posts import serializers
@@ -22,6 +22,25 @@ load_dotenv()
 genai.configure(api_key=os.getenv("GEMINI_KEY"))
 model = genai.GenerativeModel("gemini-1.5-flash")
 DEV_MODE = os.getenv("DEV_MODE") == "TRUE"
+
+class ProjectList(generics.ListCreateAPIView):
+    serializer_class = serializers.ProjectSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def get_queryset(self):
+        if self.request.user.is_staff: # Get all projects if staff user
+            return Project.objects.all()
+        elif self.request.user.is_authenticated: # Other users can only see their own projects
+            return Project.objects.filter(author=self.request.user)
+        return None
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+
+class ProjectDetail(generics.RetrieveDestroyAPIView):
+    queryset = Project.objects.all()
+    serializer_class = serializers.ProjectSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 class PostList(generics.ListCreateAPIView):
     serializer_class = serializers.PostSerializer

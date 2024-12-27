@@ -7,11 +7,34 @@ import uuid
 from datetime import timedelta
 from django.utils.timezone import now
 
+class Project(models.Model):
+    title = models.CharField(_("Project title"), max_length=250, unique=True)
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name="projects",
+        null=True,
+        on_delete=models.CASCADE,
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ("-created_at",)
+
+    def __str__(self):
+        return self.title
+
 def get_default_guest_token_expiration():
         return now() + timedelta(days=7)
 
 class Post(models.Model):
-    title = models.CharField(_("Post title"), max_length=250)
+    project = models.ForeignKey(
+        Project,
+        related_name="posts",
+        null=True,
+        on_delete=models.CASCADE,
+    )
+    title = models.CharField(_("Post title"), max_length=250, unique=True)
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         related_name="posts",
@@ -28,7 +51,7 @@ class Post(models.Model):
     guest_token_expiration = models.DateTimeField(default=get_default_guest_token_expiration)
 
     class Meta:
-        ordering = ("-created_at",)
+        ordering = ("title",)
 
     def __str__(self):
         return f"{self.title} by {self.author}"
