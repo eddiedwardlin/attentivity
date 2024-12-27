@@ -38,7 +38,7 @@ function RegisterForm({route}: Props) {
 
             if (status === 400) { // Format error messages before alerting
                 for (let i = 0; i < data.password.length-1; i++) {
-                    errorMessages += data.password[i] + '\n';
+                    errorMessages += data.password[i] + '\n\n';
                 }
                 errorMessages += data.password[data.password.length-1]
                 alert(errorMessages);

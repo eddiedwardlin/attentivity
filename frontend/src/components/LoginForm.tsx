@@ -28,16 +28,8 @@ function LoginForm({route}: Props) {
             localStorage.setItem(REFRESH_TOKEN, res.data.tokens.refresh);
             navigate("/");
         } catch (error: any) {
-            const { status, data } = error.response;
-            let errorMessages = "";
-
-            if (status === 400) { // Format error messages before alerting
-                for (let i = 0; i < data.non_field_errors.length-1; i++) {
-                    errorMessages += data.non_field_errors[i] + '\n';
-                }
-                errorMessages += data.non_field_errors[data.non_field_errors.length-1]
-                alert(errorMessages);
-            }
+            console.log(error.response.data.error);
+            alert("Incorrect Credentials")
         }
     };
 
