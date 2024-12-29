@@ -13,7 +13,17 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import Footer from "../components/Footer";
 import "../styles/Home.css"
 
+interface User { // Custom type to store user info
+    id: number;
+    first_name: string;
+    last_name: string;
+    email: string;
+    posts: number[];
+    is_staff: boolean;
+};
+
 function Home() {
+    const [currUser, setCurrUser] = useState<User | null>(null);
     const [posts, setPosts] = useState<any[]>([]);
     const [projects, setProjects] = useState<any[]>([]);
     const [projectTitle, setProjectTitle] = useState("")
@@ -27,9 +37,18 @@ function Home() {
     const [postLoading, setPostLoading] = useState(false);
 
     useEffect(() => {
+        getUser();
         getPosts(); // Get posts as soon as page renders
         getProjects();  // Get projects as soon as page renders
     }, []);
+
+    const getUser = () => {
+        api
+            .get("/users/")
+            .then((res) => res.data)
+            .then((data) => { setCurrUser(data) })
+            .catch((err) => console.log(err));
+    };
 
     const getProjects = () => { // Get all projects associated with user (get all projects if staff)
         api
@@ -153,7 +172,7 @@ function Home() {
                             <div className="accordion-header-container">
                                 <CloseButton variant="white" onClick={() => deleteProject(project.id)} className="delete-button"/>
                                 <Accordion.Header className="accordion-header">
-                                    {project.title}
+                                    {project.title} - {currUser?.is_staff && project.author}
                                 </Accordion.Header>
                             </div>
                             <Accordion.Body>
@@ -209,7 +228,7 @@ function Home() {
                             <option value="">Select a Project</option>
                             {projects.map((project) => (
                                 <option key={project.id} value={project.title}>
-                                    {project.title}
+                                    {project.title} - {currUser?.is_staff && project.author}
                                 </option>
                             ))}
                         </Form.Select>
