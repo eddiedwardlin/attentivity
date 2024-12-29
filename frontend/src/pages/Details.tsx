@@ -42,7 +42,7 @@ function Details() {
             <Toast bg="secondary" onClose={() => setCopyAlert(false)} show={copyAlert} delay={1500} autohide className="copy-toast">
                 <Toast.Body className="toast-text">Copied</Toast.Body>
             </Toast>
-            <Link to={`/guestDetails/${state.data.id}/${guestToken}`} onClick={(e) => copyLink(e, `/guestDetails/${state.data.id}/${guestToken}`)}>Share This Feedback Link (click to copy)</Link>
+            <Link to={`/guestDetails/${state.data.id}/${guestToken}`} onClick={(e) => copyLink(e, `/guestDetails/${state.data.id}/${guestToken}`)}>Share feedback Link (click to copy)</Link>
             <Button variant="warning" size="sm" onClick={() => setRefreshAlert(true)}>Refresh Feedback Link</Button>
             <Modal show={refreshAlert} onHide={() => setRefreshAlert(false)}>
                 <Modal.Header closeButton>
