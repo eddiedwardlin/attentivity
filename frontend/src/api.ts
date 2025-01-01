@@ -9,7 +9,7 @@ api.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem(ACCESS_TOKEN);
 
-        if (token && !config.url?.includes('/users/register') && !config.url?.includes('/users/login')) { // Append access token if not registering or logging in
+        if (token && !config.url?.includes('/users/register') && !config.url?.includes('/users/login')&& !config.url?.includes('/api/password_reset/')) { // Only append access token if logged in
             config.headers.Authorization = `Bearer ${token}`;
         }
         return config;

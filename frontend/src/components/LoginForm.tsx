@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import api from "../api";
 import { useNavigate } from "react-router-dom";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
@@ -50,7 +51,11 @@ function LoginForm({route}: Props) {
             <Button variant="secondary" type="button" onClick={() => navigate('/register')}>
                 Create Account
             </Button>
+            <Button variant="link" type="button" size="sm" onClick={() => navigate('/requestPasswordReset')}>
+                Forgot Password?
+            </Button>
         </div>
+        
     </Form>;
 };
 

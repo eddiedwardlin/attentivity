@@ -11,6 +11,7 @@ import Accordion from 'react-bootstrap/Accordion';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Footer from "../components/Footer";
+// import Select from 'react-select';
 import "../styles/Home.css"
 
 interface User { // Custom type to store user info
@@ -35,10 +36,16 @@ function Home() {
     const [image, setImage] = useState<File | null>(null);
     const [file, setFile] = useState<File | null>(null);
     const [postLoading, setPostLoading] = useState(false);
+    const [currList, setCurrList] = useState("My Projects");
+    const [userEmails, setUserEmails] = useState<any[]>([]);
+    const [additionalUsers, setAdditionalUsers] = useState<any[]>([]);
+    const [additionalPosts, setAdditionalPosts] = useState<any[]>([]);
 
     useEffect(() => {
-        getUser();
+        getUser(); // Get user to check if admin
+        getUserEmails();
         getPosts(); // Get posts as soon as page renders
+        getAdditionalPosts();
         getProjects();  // Get projects as soon as page renders
     }, []);
 
@@ -50,13 +57,24 @@ function Home() {
             .catch((err) => console.log(err));
     };
 
+    const getUserEmails = () => { // Get user emails to be used to add additional users
+        api
+            .get("/users/list/")
+            .then ((res) => res.data)
+            .then ((data) => {
+                setUserEmails(data);
+            })
+            .catch((err) => console.log(err))
+    }
+
     const getProjects = () => { // Get all projects associated with user (get all projects if staff)
         api
             .get("/posts/projects/")
             .then((res) => res.data)
-            .then((data) => { setProjects(data), console.log(data) })
+            .then((data) => { setProjects(data) })
             .catch((err) => {console.log(err)});
     }
+
     const deleteProject = (id: number) => { // Delete a project
         api.delete(`/posts/projects/${id}/`).then((res) => {
             if (res.status === 204) {
@@ -97,9 +115,17 @@ function Home() {
         api
             .get("/posts/")
             .then((res) => res.data)
-            .then((data) => { setPosts(data), console.log(data) })
+            .then((data) => { setPosts(data) })
             .catch((err) => console.log(err));
     };
+
+    const getAdditionalPosts = () => { // Guest posts the current user is a collaborator on
+        api
+            .get("/posts/additional/")
+            .then((res) => res.data)
+            .then((data) => { setAdditionalPosts(data) })
+            .catch((err) => console.log(err));
+    }
 
     const deletePost = (id: number) => { // Delete a post
         api.delete(`/posts/${id}/`).then((res) => {
@@ -159,38 +185,57 @@ function Home() {
         <div className="form-posts-container">
             <div className="posts-container">
                 <div className="header-container">
-                    <h1>Projects</h1>
-                    <DropdownButton id="dropdown-basic-button" title="Sort by" size="sm" variant="secondary" data-bs-theme="dark" align="end" onSelect={(e) => setProjectSort(e ?? 'date')}>
+                    <div className="list-select">
+                        {currList === "My Projects" && <h1>{currList}</h1>}
+                        {/* {currList === "Shared Posts" && <h1>{currList}</h1>} */}
+                        {/* <DropdownButton id="dropdown-sort" title="" size="sm" data-bs-theme="dark" onSelect={(e) => setCurrList(e ?? 'My Projects')}>
+                            <Dropdown.Item eventKey="My Projects" active={projectSort === 'My Projects'}>My Projects</Dropdown.Item>
+                            <Dropdown.Item eventKey="Shared Posts" active={projectSort === 'Shared Posts'}>Shared Posts</Dropdown.Item>
+                        </DropdownButton> */}
+                    </div>
+                    <DropdownButton id="dropdown-sort" title="Sort by" size="sm" variant="secondary" data-bs-theme="dark" align="end" disabled={currList === "Shared Posts"} onSelect={(e) => setProjectSort(e ?? 'date')}>
                         <Dropdown.Item eventKey="date" active={projectSort === 'date'}>Date added</Dropdown.Item>
                         <Dropdown.Item eventKey="title" active={projectSort === 'title'}>Title</Dropdown.Item>
                     </DropdownButton>
                 </div>
                 {projects.length === 0 && <p className="center-p">No projects</p>}
-                <Accordion flush alwaysOpen>
-                    {sortedProjects.map((project) => (
-                        <Accordion.Item eventKey={project.id.toString()} key={project.id}>
-                            <div className="accordion-header-container">
-                                <CloseButton variant="white" onClick={() => deleteProject(project.id)} className="delete-button"/>
-                                <Accordion.Header className="accordion-header">
-                                    {project.title} - {currUser?.is_staff && project.author}
-                                </Accordion.Header>
-                            </div>
-                            <Accordion.Body>
-                                <ListGroup variant="flush">
-                                    {project.posts.length === 0 && <p className="center-p-small-margins">No posts</p>}
-                                    {posts.map((post) => (
-                                        project.posts.includes(post.id) && (
-                                            <ListGroup.Item key={post.id} className="list-group-item-no-background-no-border">
-                                                <CloseButton variant="white" onClick={() => deletePost(post.id)} className="delete-button"/>
-                                                <Link to="/details" state={{data: post}} className="link-item"><b>{post.title}:</b> {post.body.slice(0, 50)}{post.body.length > 50 && '...'}</Link>
-                                            </ListGroup.Item>
-                                        )
-                                    ))}
-                                </ListGroup>
-                            </Accordion.Body>
-                        </Accordion.Item>
-                    ))}
-                </Accordion>
+                {currList === "My Projects" &&
+                    <Accordion flush alwaysOpen>
+                        {sortedProjects.map((project) => (
+                            <Accordion.Item eventKey={project.id.toString()} key={project.id}>
+                                <div className="accordion-header-container">
+                                    <CloseButton variant="white" onClick={() => deleteProject(project.id)} className="delete-button"/>
+                                    <Accordion.Header className="accordion-header">
+                                        {project.title} - {currUser?.is_staff && project.author}
+                                    </Accordion.Header>
+                                </div>
+                                <Accordion.Body>
+                                    <ListGroup variant="flush">
+                                        {project.posts.length === 0 && <p className="center-p-small-margins">No posts</p>}
+                                        {posts.map((post) => (
+                                            project.posts.includes(post.id) && (
+                                                <ListGroup.Item key={post.id} className="list-group-item-no-background-no-border">
+                                                    <CloseButton variant="white" onClick={() => deletePost(post.id)} className="delete-button"/>
+                                                    <Link to="/details" state={{data: post}} className="link-item"><b>{post.title}:</b> {post.body.slice(0, 50)}{post.body.length > 50 && '...'}</Link>
+                                                </ListGroup.Item>
+                                            )
+                                        ))}
+                                    </ListGroup>
+                                </Accordion.Body>
+                            </Accordion.Item>
+                        ))}
+                    </Accordion>
+                }
+                {/* {currList === "Shared Posts" && 
+                    <ListGroup variant="flush" numbered>
+                        {additionalPosts.length === 0 && <p className="center-p-small-margins">No posts</p>}
+                        {additionalPosts.map((post) => (
+                            <ListGroup.Item key={post.id}>
+                                <Link to="/details" state={{data: post}} className="link-item"><b>{post.title}:</b> {post.body.slice(0, 50)}{post.body.length > 50 && '...'} - {post.author}</Link>
+                            </ListGroup.Item>
+                        ))}
+                    </ListGroup>
+                } */}
             </div>
             <div className="home-form-container">
                 <Form onSubmit={(e) => {
@@ -277,6 +322,20 @@ function Home() {
                             }}
                         />
                     </Form.Group>
+                    {/* <Form.Group controlId="formAdditionalUsers" className="mb-3">
+                        <Form.Label>Share With</Form.Label>
+                        <Select
+                            isMulti
+                            options={userEmails.map(user => ({
+                                label: user.email,
+                                value: user.value
+                            }))}
+                            value={additionalUsers}
+                            onChange={(options) => setAdditionalUsers([...options])}
+                            placeholder="Search and select users..."
+                            classNamePrefix="react-select"
+                        />
+                    </Form.Group> */}
                     <Button variant="primary" type="submit" disabled={postLoading || !title.trim() || !content.trim() || !project.trim()}>
                         {postLoading ? 'Loading…' : 'Submit'}
                     </Button>

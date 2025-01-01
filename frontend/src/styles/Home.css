@@ -31,3 +31,9 @@
 .accordion-header {
   flex-grow: 1;
 }
+
+.list-select {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}

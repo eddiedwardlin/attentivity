@@ -4,6 +4,8 @@ import Register from "./pages/Register";
 import Home from "./pages/Home";
 import Details from "./pages/Details";
 import NotFound from "./pages/NotFound";
+import PasswordReset from "./pages/PasswordReset";
+import RequestPasswordReset from "./pages/RequestPasswordReset";
 import ProtectedRoute from "./components/ProtectedRoute"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/App.css'
@@ -43,6 +45,8 @@ function App() {
         <Route path="/login" element={<Login />}/>
         <Route path="/logout" element={<Logout />}/>
         <Route path="/register" element={<RegisterAndLogout />}/>
+        <Route path="/passwordReset" element={<PasswordReset />}/>
+        <Route path="/requestPasswordReset" element={<RequestPasswordReset />}/>
         <Route path="*" element={<NotFound />}></Route>
       </Routes>
     </BrowserRouter>

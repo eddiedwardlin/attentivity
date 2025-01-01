@@ -1,6 +1,6 @@
 from rest_framework import serializers
-
 from .models import Comment, Post, Project
+from django.contrib.auth import get_user_model
 
 class ProjectSerializer(serializers.ModelSerializer):
     author = serializers.ReadOnlyField(source='author.email')
@@ -18,10 +18,11 @@ class PostSerializer(serializers.ModelSerializer):
     file = serializers.FileField(required=False)
     summary = serializers.ReadOnlyField()
     guest_token_expiration = serializers.ReadOnlyField()
+    additional_users = serializers.SlugRelatedField(queryset=get_user_model().objects.all(), slug_field='email', many=True)
 
     class Meta:
         model = Post
-        fields = ['id', 'project', 'title', 'body', 'author', 'image', 'file', 'comments', 'summary', 'guest_token', 'guest_token_expiration']
+        fields = ['id', 'project', 'title', 'body', 'author', 'image', 'file', 'comments', 'summary', 'guest_token', 'guest_token_expiration', 'additional_users']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
