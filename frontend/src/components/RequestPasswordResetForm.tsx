@@ -15,7 +15,7 @@ function RequestPasswordResetForm({route}: Props) {
         e.preventDefault();
 
         try {
-            const res = await api.post(route, { 
+            await api.post(route, { 
                 email: email
             });
             alert("Password reset mail sent");
