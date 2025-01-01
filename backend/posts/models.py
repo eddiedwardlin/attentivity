@@ -52,6 +52,11 @@ class Post(models.Model):
     summary = models.TextField(null=True, blank=True)
     guest_token = models.UUIDField(default=uuid.uuid4, editable=False)
     guest_token_expiration = models.DateTimeField(default=get_default_guest_token_expiration)
+    additional_users = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name="accessible_posts",
+        blank=True,
+    )
 
     class Meta:
         ordering = ("title",)

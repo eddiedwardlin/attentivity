@@ -3,7 +3,7 @@ import "../styles/Footer.css"
 function Footer () {
     return <div className="footer">
         <a href="https://forms.gle/EhDo8Mtz9JUdNC9v7" target="_blank" rel="noopener noreferrer">Feel free to leave feedback here!</a>
-        <p><small>Brought to you by Edward Lin.</small></p>
+        <p><small>Attentivity, brought to you by Edward Lin.</small></p>
     </div>
 }
 

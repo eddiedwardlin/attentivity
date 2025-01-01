@@ -15,6 +15,11 @@ class CustomUserSerializer(serializers.ModelSerializer):
         model = CustomUser
         fields = ("id", "first_name", "last_name", "email", 'posts', 'is_staff')
 
+class CustomUserEmailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ("id", "email")
+
 class UserRegistrationSerializer(serializers.ModelSerializer):
     """
     Serializer class to serialize registration requests and create a new user.

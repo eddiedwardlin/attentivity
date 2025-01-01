@@ -95,6 +95,7 @@ INSTALLED_APPS = [
     'users',
     'posts',
     'storages',
+    'django_rest_passwordreset',
 ]
 
 X_FRAME_OPTIONS = 'SAMEORIGIN'
@@ -241,3 +242,11 @@ else:
     }
     MEDIA_URL = f'{os.getenv("SPACES_CDN_ENDPOINT")}/media/'
     STATIC_URL = f'{os.getenv("SPACES_CDN_ENDPOINT")}/static/'
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = os.getenv("EMAIL_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PASSWORD")

@@ -23,7 +23,7 @@ genai.configure(api_key=os.getenv("GEMINI_KEY"))
 model = genai.GenerativeModel("gemini-1.5-flash")
 DEV_MODE = os.getenv("DEV_MODE") == "TRUE"
 
-class ProjectList(generics.ListCreateAPIView):
+class ProjectListCreate(generics.ListCreateAPIView):
     serializer_class = serializers.ProjectSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
@@ -42,7 +42,7 @@ class ProjectDetail(generics.RetrieveDestroyAPIView):
     serializer_class = serializers.ProjectSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-class PostList(generics.ListCreateAPIView):
+class PostListCreate(generics.ListCreateAPIView):
     serializer_class = serializers.PostSerializer
     parser_classes = [MultiPartParser, FormParser] # Different parsers to deal with images and files
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
@@ -71,6 +71,19 @@ class PostDetail(generics.RetrieveUpdateDestroyAPIView):
             return [permissions.IsAuthenticatedOrReadOnly(), IsAuthorOrReadOnly()]
             
         return [permissions.IsAuthenticatedOrReadOnly()]
+
+class PostListAdditional(generics.ListAPIView):
+    serializer_class = serializers.PostSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def get_queryset(self):
+        user = self.request.user
+        return Post.objects.filter(additional_users=user) # Filters out posts that the logged in user is an additional user for
+
+class PostRetrieveUpdateAdditional(generics.RetrieveUpdateAPIView):
+    queryset = Post.objects.all()
+    serializer_class = serializers.PostSerializer
+    permission_classes = [IsAuthorOrReadOnly]
         
 class RefreshGuestToken(generics.UpdateAPIView):
     queryset = Post.objects.all()
@@ -105,7 +118,7 @@ class PostSummary(generics.RetrieveAPIView):
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
 
-class CommentList(generics.ListCreateAPIView):
+class CommentListCreate(generics.ListCreateAPIView):
     serializer_class = serializers.CommentSerializer
 
     def get_queryset(self):
