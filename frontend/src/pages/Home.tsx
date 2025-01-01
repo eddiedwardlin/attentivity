@@ -37,16 +37,17 @@ function Home() {
     const [file, setFile] = useState<File | null>(null);
     const [postLoading, setPostLoading] = useState(false);
     const [currList, setCurrList] = useState("My Projects");
-    const [userEmails, setUserEmails] = useState<any[]>([]);
-    const [additionalUsers, setAdditionalUsers] = useState<any[]>([]);
-    const [additionalPosts, setAdditionalPosts] = useState<any[]>([]);
+    // const [userEmails, setUserEmails] = useState<any[]>([]);
+    // const [additionalUsers, setAdditionalUsers] = useState<any[]>([]);
+    // const [additionalPosts, setAdditionalPosts] = useState<any[]>([]);
 
     useEffect(() => {
+        setCurrList("My Projects"); // TEMP TO PREVENT WARNINGS
         getUser(); // Get user to check if admin
-        getUserEmails();
-        getPosts(); // Get posts as soon as page renders
-        getAdditionalPosts();
+        getPosts(); // Get posts as soon as page renders 
         getProjects();  // Get projects as soon as page renders
+        // getUserEmails();
+        // getAdditionalPosts();
     }, []);
 
     const getUser = () => {
@@ -57,15 +58,15 @@ function Home() {
             .catch((err) => console.log(err));
     };
 
-    const getUserEmails = () => { // Get user emails to be used to add additional users
-        api
-            .get("/users/list/")
-            .then ((res) => res.data)
-            .then ((data) => {
-                setUserEmails(data);
-            })
-            .catch((err) => console.log(err))
-    }
+    // const getUserEmails = () => { // Get user emails to be used to add additional users
+    //     api
+    //         .get("/users/list/")
+    //         .then ((res) => res.data)
+    //         .then ((data) => {
+    //             setUserEmails(data);
+    //         })
+    //         .catch((err) => console.log(err))
+    // }
 
     const getProjects = () => { // Get all projects associated with user (get all projects if staff)
         api
@@ -119,13 +120,13 @@ function Home() {
             .catch((err) => console.log(err));
     };
 
-    const getAdditionalPosts = () => { // Guest posts the current user is a collaborator on
-        api
-            .get("/posts/additional/")
-            .then((res) => res.data)
-            .then((data) => { setAdditionalPosts(data) })
-            .catch((err) => console.log(err));
-    }
+    // const getAdditionalPosts = () => { // Guest posts the current user is a collaborator on
+    //     api
+    //         .get("/posts/additional/")
+    //         .then((res) => res.data)
+    //         .then((data) => { setAdditionalPosts(data) })
+    //         .catch((err) => console.log(err));
+    // }
 
     const deletePost = (id: number) => { // Delete a post
         api.delete(`/posts/${id}/`).then((res) => {

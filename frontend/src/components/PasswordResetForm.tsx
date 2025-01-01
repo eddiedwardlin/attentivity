@@ -26,7 +26,7 @@ function PasswordResetForm({route}: Props) {
                 return;
             }
 
-            const res = await api.post(route, { 
+            await api.post(route, { 
                 password: password, 
                 token: token
             });
