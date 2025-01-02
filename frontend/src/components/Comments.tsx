@@ -7,6 +7,7 @@ import Spinner from 'react-bootstrap/Spinner';
 import ListGroup from 'react-bootstrap/ListGroup';
 import CloseButton from 'react-bootstrap/CloseButton';
 import "../styles/Button.css"
+import "../styles/Comments.css"
 
 interface User { // Custom type to store user info
     id: number;
@@ -145,18 +146,20 @@ function Comments({post, isGuest}: Props) {
 
         <h4>Comments:</h4>
         {comments.length === 0 && <p className="center-p">No comments</p>}
-        <ListGroup variant="flush">
-            {comments.map((comment) => (
-                <ListGroup.Item key={comment.id} className="list-group-item-no-background">
-                    {((!comment.author && newlyAddedComments.some((newComment) => newComment === comment.body)) || currUser) && (
-                        <CloseButton variant="white" onClick={() => deleteComment(comment.id)} className="delete-button"/>
-                    )}
-                    {!!comment.author ? (
-                        <span className="list-span"><b>Post author:</b> {comment.body} </span>
-                    ) : <span className="list-span"><b>{comment.guest_name}:</b> {comment.body}</span>}
-                </ListGroup.Item>
-            ))}
-        </ListGroup>
+        <div className="comments-list-container">
+            <ListGroup variant="flush">
+                {comments.map((comment) => (
+                    <ListGroup.Item key={comment.id} className="list-group-item-no-background">
+                        {((!comment.author && newlyAddedComments.some((newComment) => newComment === comment.body)) || currUser) && (
+                            <CloseButton variant="white" onClick={() => deleteComment(comment.id)} className="delete-button"/>
+                        )}
+                        {!!comment.author ? (
+                            <span className="list-span"><b>Post author:</b> {comment.body} </span>
+                        ) : <span className="list-span"><b>{comment.guest_name}:</b> {comment.body}</span>}
+                    </ListGroup.Item>
+                ))}
+            </ListGroup>
+        </div>
 
         {!isGuest && (
             <div className="centered-container">
