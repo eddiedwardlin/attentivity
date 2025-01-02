@@ -3,6 +3,7 @@ import api from "../api";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import Alert from 'react-bootstrap/Alert';
 import "../styles/Form.css";
 
 interface Props {
@@ -12,6 +13,7 @@ interface Props {
 function PasswordResetForm({route}: Props) {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [myAlert, setMyAlert] = useState("");
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
 
@@ -33,7 +35,12 @@ function PasswordResetForm({route}: Props) {
             alert("Password successfully reset")
             navigate("/login");
         } catch (error: any) {
-            console.log(error)
+            const { status, data } = error.response;
+
+            if (status == 400) {
+                const parsed_errors = data.password.join('\n\n');
+                setMyAlert(parsed_errors);
+            }
         }
     };
 
@@ -47,6 +54,11 @@ function PasswordResetForm({route}: Props) {
             <Form.Label>Confirm Password *</Form.Label>
             <Form.Control type="password" placeholder="Confirm Password" onChange={(e) => setConfirmPassword(e.target.value)} />
         </Form.Group>
+        {myAlert != "" &&
+            <Alert variant="danger">
+                {myAlert}
+            </Alert>
+        }
         <Button variant="primary" type="submit">
             Reset
         </Button>

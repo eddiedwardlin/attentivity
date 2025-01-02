@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from backend import views
 
 urlpatterns = [
     path("users/", include("users.urls", namespace="users")),
@@ -25,6 +26,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("api-auth/", include("rest_framework.urls")),
     path('api/password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
+    path('api/password_reset/confirm/', views.CustomResetPasswordConfirmView.as_view(), name='password_reset_confirm'),
 ]
 
 if settings.DEBUG:
