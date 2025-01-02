@@ -48,6 +48,7 @@ def getSummary(instance, comments): # Instance is a post
 
         prompt = prompt.format(
             type=mime_type,
+            title=instance.title,
             body=instance.body,
             comments=unquote(comments)
         )
@@ -99,6 +100,7 @@ def getSummary(instance, comments): # Instance is a post
 
         prompt = prompt.format(
             type=mime_type,
+            title=instance.title,
             body=instance.body,
             comments=unquote(comments)
         )
@@ -116,6 +118,7 @@ def getSummary(instance, comments): # Instance is a post
             prompt = file.read()
 
         prompt = prompt.format(
+            title=instance.title,
             body=instance.body,
             comments=unquote(comments)
         )

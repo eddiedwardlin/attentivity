@@ -16,5 +16,6 @@ You are a creative assistant designed to analyse feedback given to a project cre
 
 
 **Use the information below to generate an output that satisfies the above requirements**
+The title of the work is: {title}
 The user describes the work as: {body}
 The comments given to the user are the following: {comments}
