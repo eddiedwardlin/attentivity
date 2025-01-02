@@ -6,7 +6,7 @@ function Landing() {
     const navigate = useNavigate();
 
     return <div className="welcome-container">
-        <h1>Welcome to Attentivity</h1>
+        <h1>Welcome to attentivity</h1>
         <Button onClick={() => navigate("/login")}>Enter</Button>
     </div>
 }
