@@ -207,7 +207,7 @@ function Home() {
                                 <div className="accordion-header-container">
                                     <CloseButton variant="white" onClick={() => deleteProject(project.id)} className="delete-button"/>
                                     <Accordion.Header className="accordion-header">
-                                        {project.title} - {currUser?.is_staff && project.author}
+                                        {project.title}{currUser?.is_staff && " - " + project.author}
                                     </Accordion.Header>
                                 </div>
                                 <Accordion.Body>
@@ -274,7 +274,7 @@ function Home() {
                             <option value="">Select a Project</option>
                             {projects.map((project) => (
                                 <option key={project.id} value={project.title}>
-                                    {project.title} - {currUser?.is_staff && project.author}
+                                    {project.title}{currUser?.is_staff && " - " + project.author}
                                 </option>
                             ))}
                         </Form.Select>
