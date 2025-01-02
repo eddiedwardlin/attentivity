@@ -7,6 +7,7 @@ import NotFound from "./pages/NotFound";
 import PasswordReset from "./pages/PasswordReset";
 import RequestPasswordReset from "./pages/RequestPasswordReset";
 import ProtectedRoute from "./components/ProtectedRoute"
+import Landing from "./pages/Landing";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/App.css'
 import GuestDetails from "./pages/GuestDetails";
@@ -26,7 +27,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route
-          path="/"
+          path="/home"
           element={
             <ProtectedRoute>
               <Home />
@@ -47,6 +48,7 @@ function App() {
         <Route path="/register" element={<RegisterAndLogout />}/>
         <Route path="/passwordReset" element={<PasswordReset />}/>
         <Route path="/requestPasswordReset" element={<RequestPasswordReset />}/>
+        <Route path="/" element={<Landing />}/>
         <Route path="*" element={<NotFound />}></Route>
       </Routes>
     </BrowserRouter>
