@@ -31,6 +31,7 @@ function Comments({post, isGuest}: Props) {
     const [summaryLoading, setSummaryLoading] = useState(false);
     const[commentLoading, setCommentLoading] = useState(false);
     const [guestName, setGuestName] = useState("Guest");
+    const [newlyAddedComments, setNewlyAddedComments] = useState<string[]>([]);
 
     useEffect(() => {
         getComments();
@@ -123,6 +124,7 @@ function Comments({post, isGuest}: Props) {
             <Form onSubmit={(e) => {
                     e.preventDefault();
                     createComment(e);
+                    setNewlyAddedComments((prev) => [...prev, newComment]);
                     setNewComment('');
                 }} 
                 className="form-container-wide">
@@ -146,7 +148,7 @@ function Comments({post, isGuest}: Props) {
         <ListGroup variant="flush">
             {comments.map((comment) => (
                 <ListGroup.Item key={comment.id} className="list-group-item-no-background">
-                    {(!comment.author || currUser) && (
+                    {((!comment.author && newlyAddedComments.some((newComment) => newComment === comment.body)) || currUser) && (
                         <CloseButton variant="white" onClick={() => deleteComment(comment.id)} className="delete-button"/>
                     )}
                     {!!comment.author ? (
