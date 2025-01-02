@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import Alert from 'react-bootstrap/Alert';
 import "../styles/Form.css";
 
 interface Props {
@@ -16,6 +17,7 @@ function RegisterForm({route}: Props) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [myAlert, setMyAlert] = useState("");
     const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => { // Function for registering a user
@@ -34,14 +36,10 @@ function RegisterForm({route}: Props) {
             navigate("/login");
         } catch (error: any) {
             const { status, data } = error.response;
-            let errorMessages = "";
 
             if (status === 400) { // Format error messages before alerting
-                for (let i = 0; i < data.password.length-1; i++) {
-                    errorMessages += data.password[i] + '\n\n';
-                }
-                errorMessages += data.password[data.password.length-1]
-                alert(errorMessages);
+                const parsed_errors = data.password.join('\n\n');
+                setMyAlert(parsed_errors);
             }
         }
     };
@@ -68,9 +66,15 @@ function RegisterForm({route}: Props) {
             <Form.Label>Confirm Password *</Form.Label>
             <Form.Control type="password" placeholder="Confirm Password" onChange={(e) => setConfirmPassword(e.target.value)} />
         </Form.Group>
+        {myAlert != "" &&
+            <Alert variant="danger">
+                {myAlert}
+            </Alert>
+        }
         <Button variant="primary" type="submit">
             Register
         </Button>
+        
     </Form>;
 };
 

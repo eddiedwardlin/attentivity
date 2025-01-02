@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import Alert from 'react-bootstrap/Alert';
 import "../styles/Form.css";
 import "../styles/Button.css"
 
@@ -14,6 +15,7 @@ interface Props {
 function LoginForm({route}: Props) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [myAlert, setMyAlert] = useState("");
     const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => { // Function for logging in
@@ -29,7 +31,7 @@ function LoginForm({route}: Props) {
             navigate("/");
         } catch (error: any) {
             console.log(error.response.data.error);
-            alert("Incorrect Credentials")
+            setMyAlert("Incorrect Credentials")
         }
     };
 
@@ -43,6 +45,11 @@ function LoginForm({route}: Props) {
             <Form.Label>Password *</Form.Label>
             <Form.Control type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
         </Form.Group>
+        {myAlert != "" &&
+            <Alert variant="danger">
+                {myAlert}
+            </Alert>
+        }
         <div className="form-button-container">
             <Button variant="primary" type="submit">
                 Login
