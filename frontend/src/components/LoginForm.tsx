@@ -28,7 +28,7 @@ function LoginForm({route}: Props) {
             });
             localStorage.setItem(ACCESS_TOKEN, res.data.tokens.access);
             localStorage.setItem(REFRESH_TOKEN, res.data.tokens.refresh);
-            navigate("/");
+            navigate("/home");
         } catch (error: any) {
             console.log(error.response.data.error);
             setMyAlert("Incorrect Credentials")
