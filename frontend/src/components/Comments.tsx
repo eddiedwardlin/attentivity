@@ -132,7 +132,7 @@ function Comments({post, isGuest}: Props) {
                 <h4>Add a Comment</h4>
                 <Form.Group className="mb-3" controlId="formName">
                     <Form.Label>Name</Form.Label>
-                    <Form.Control type="text" placeholder="Enter your name (defaults to Guest)" onChange={(e) => setGuestName(e.target.value)} />
+                    <Form.Control type="text" placeholder="Enter your name if not logged in (defaults to Guest)" onChange={(e) => setGuestName(e.target.value)} />
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="formComment">
                     <Form.Label>Comment *</Form.Label>
