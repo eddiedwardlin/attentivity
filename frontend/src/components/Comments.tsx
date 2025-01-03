@@ -30,7 +30,7 @@ function Comments({post, isGuest}: Props) {
     const [currUser, setCurrUser] = useState<User | null>(null);
     const [updated, setUpdated] = useState(true);
     const [summaryLoading, setSummaryLoading] = useState(false);
-    const[commentLoading, setCommentLoading] = useState(false);
+    const [commentLoading, setCommentLoading] = useState(false);
     const [guestName, setGuestName] = useState("Guest");
     const [newlyAddedComments, setNewlyAddedComments] = useState<string[]>([]);
 
@@ -55,7 +55,7 @@ function Comments({post, isGuest}: Props) {
             .get(`/posts/${post.id}/comments/`, {
                 params: { guest_token: post.guest_token },
             }).then((res) => res.data)
-            .then((data) => { setComments(data) })
+            .then((data) => { setComments(data), console.log(data) })
             .catch((err) => console.log(err));
     };
 
@@ -132,7 +132,7 @@ function Comments({post, isGuest}: Props) {
                 <h4>Add a Comment</h4>
                 <Form.Group className="mb-3" controlId="formName">
                     <Form.Label>Name</Form.Label>
-                    <Form.Control type="text" placeholder="Enter your name (defaults to Guest)" onChange={(e) => setGuestName(e.target.value)} />
+                    <Form.Control type="text" placeholder="Enter your name if not logged in (defaults to Guest)" onChange={(e) => setGuestName(e.target.value)} />
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="formComment">
                     <Form.Label>Comment *</Form.Label>
@@ -153,8 +153,8 @@ function Comments({post, isGuest}: Props) {
                         {((!comment.author && newlyAddedComments.some((newComment) => newComment === comment.body)) || currUser) && (
                             <CloseButton variant="white" onClick={() => deleteComment(comment.id)} className="delete-button"/>
                         )}
-                        {!!comment.author ? (
-                            <span className="list-span"><b>Post author:</b> {comment.body} </span>
+                        {!!comment.author_first_name ? (
+                            <span className="list-span"><b>{comment.author_first_name}:</b> {comment.body} </span>
                         ) : <span className="list-span"><b>{comment.guest_name}:</b> {comment.body}</span>}
                     </ListGroup.Item>
                 ))}

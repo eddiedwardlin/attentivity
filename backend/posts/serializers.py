@@ -47,8 +47,10 @@ class PostSerializer(serializers.ModelSerializer):
         return data
 
 class CommentSerializer(serializers.ModelSerializer):
-    author = serializers.ReadOnlyField(source='author.email')
+    author_email = serializers.ReadOnlyField(source='author.email')
+    author_first_name = serializers.ReadOnlyField(source='author.first_name')
+    author_last_name = serializers.ReadOnlyField(source='author.last_name')
 
     class Meta:
         model = Comment
-        fields = ['id', 'body', 'author', 'guest_name']
+        fields = ['id', 'body', 'author_email', 'author_first_name', 'author_last_name', 'guest_name']
