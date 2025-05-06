@@ -61,7 +61,6 @@ function LoginForm({route}: Props) {
                 Forgot Password?
             </Button>
         </div>
-        
     </Form>;
 };
 
